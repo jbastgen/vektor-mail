@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.3</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>de.vektor</groupId>
+    <artifactId>vektor-mail</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>vektor-mail</name>
+    <description>Vektor Mail - Spring Boot Maven Multi-Module Project with Apache Felix OSGi</description>
+
+    <modules>
+        <module>vektor-mail-core</module>
+        <module>vektor-mail-osgi</module>
+        <module>vektor-mail-app</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <apache.felix.version>7.0.5</apache.felix.version>
+        <osgi.version>8.0.0</osgi.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Internal modules -->
+            <dependency>
+                <groupId>de.vektor</groupId>
+                <artifactId>vektor-mail-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.vektor</groupId>
+                <artifactId>vektor-mail-osgi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- OSGi API -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.core</artifactId>
+                <version>${osgi.version}</version>
+            </dependency>
+
+            <!-- Apache Felix OSGi Framework -->
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.framework</artifactId>
+                <version>${apache.felix.version}</version>
+            </dependency>
+
+            <!-- Apache Felix SCR (Declarative Services) -->
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr</artifactId>
+                <version>2.2.6</version>
+            </dependency>
+
+            <!-- Apache Felix File Install -->
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.fileinstall</artifactId>
+                <version>3.7.4</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>5.1.9</version>
+                    <extensions>true</extensions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

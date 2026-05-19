@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+           https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.vektor.mail</groupId>
+    <artifactId>vektor-mail-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>vektor-launcher</artifactId>
+  <name>Vektor Launcher</name>
+  <description>Spring Boot application entry point — assembles all modules</description>
+
+  <dependencies>
+    <!-- All modules -->
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-core</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-security</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-storage-db</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-storage-maildir</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-storage-mbox</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-pipeline</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-protocol-smtp</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-protocol-imap</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-protocol-pop3</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-filter-blocklist</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-filter-greylist</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-filter-spam</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-rules</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-backup</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-sync</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-search</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-admin-api</artifactId></dependency>
+    <dependency><groupId>com.vektor.mail</groupId><artifactId>vektor-webmail-api</artifactId></dependency>
+
+    <!-- Spring Boot -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+
+    <!-- Database -->
+    <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><scope>runtime</scope></dependency>
+    <dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>runtime</scope></dependency>
+    <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-core</artifactId></dependency>
+    <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-database-postgresql</artifactId></dependency>
+
+    <!-- PF4J Spring -->
+    <dependency>
+      <groupId>org.pf4j</groupId>
+      <artifactId>pf4j-spring</artifactId>
+    </dependency>
+
+    <!-- Camel -->
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
+      <artifactId>camel-spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId></exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

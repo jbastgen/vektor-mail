@@ -1,0 +1,13 @@
+apiVersion: v2
+name: vektor-mail
+description: Vektor Mail Server — plugin-driven Java 21 mail server
+type: application
+version: 1.0.0
+appVersion: "1.0.0-SNAPSHOT"
+keywords:
+  - mail
+  - smtp
+  - imap
+  - pop3
+maintainers:
+  - name: Vektor Mail Team

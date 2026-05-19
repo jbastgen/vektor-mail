@@ -1,0 +1,93 @@
+version: "3.9"
+
+services:
+  vektor-mail:
+    image: vektor/vektor-mail:${VEKTOR_VERSION:-latest}
+    build:
+      context: ../..
+      dockerfile: vektor-distribution/docker/Dockerfile
+    container_name: vektor-mail
+    restart: unless-stopped
+    ports:
+      - "25:25"
+      - "587:587"
+      - "465:465"
+      - "143:143"
+      - "993:993"
+      - "110:110"
+      - "995:995"
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/vektor
+      SPRING_DATASOURCE_USERNAME: vektor
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:change_me_in_production}
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
+      SPRING_JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      VEKTOR_MASTER_KEY: ${VEKTOR_MASTER_KEY:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+      VEKTOR_TLS_KEYSTORE_PATH: /certs/keystore.p12
+      VEKTOR_TLS_KEYSTORE_PASSWORD: ${TLS_KEYSTORE_PASSWORD:changeit}
+      VEKTOR_JWT_PRIVATE_KEY: ${VEKTOR_JWT_PRIVATE_KEY}
+      VEKTOR_JWT_PUBLIC_KEY: ${VEKTOR_JWT_PUBLIC_KEY}
+      VEKTOR_HOSTNAME: ${VEKTOR_HOSTNAME:mail.example.com}
+    volumes:
+      - mail-data:/var/vektor/mail
+      - search-index:/var/vektor/index
+      - backups:/var/vektor/backups
+      - ./plugins:/var/vektor/plugins
+      - ./certs:/certs:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: vektor-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vektor
+      POSTGRES_USER: vektor
+      POSTGRES_PASSWORD: ${DB_PASSWORD:change_me_in_production}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vektor -d vektor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: vektor-prometheus
+    profiles: ["monitoring"]
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - vektor-mail
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: vektor-grafana
+    profiles: ["monitoring"]
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:admin}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  mail-data:
+  search-index:
+  backups:
+  postgres-data:
+  grafana-data:

@@ -4,6 +4,19 @@ import { PlusOutlined } from '@ant-design/icons'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/common/api'
 
+function DomainSelect() {
+  const { data } = useQuery<{ id: string; name: string }[]>({
+    queryKey: ['domains'],
+    queryFn: () => api.get('/admin/domains').then(r => r.data),
+  })
+  return (
+    <Select
+      options={data?.map(d => ({ value: d.id, label: d.name }))}
+      placeholder="Select domain"
+    />
+  )
+}
+
 interface Account {
   id: string
   email: string
@@ -63,8 +76,8 @@ export default function AccountsPage() {
           <Form.Item name="password" label="Password" rules={[{ required: true, min: 8 }]}>
             <Input.Password />
           </Form.Item>
-          <Form.Item name="domainName" label="Domain" rules={[{ required: true }]}>
-            <Input placeholder="example.com" />
+          <Form.Item name="domainId" label="Domain" rules={[{ required: true }]}>
+            <DomainSelect />
           </Form.Item>
           <Form.Item name="roles" label="Roles" initialValue={['USER']}>
             <Select mode="multiple" options={[

@@ -23,3 +23,5 @@
 hs_err_pid*
 replay_pid*
 target/
+vektor-frontend/node_modules/
+vektor-frontend/dist/

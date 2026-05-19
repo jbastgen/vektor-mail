@@ -1,10 +1,12 @@
 package com.vektor.mail.pipeline.processor;
 
+import com.vektor.mail.core.model.Account;
 import com.vektor.mail.core.model.Mailbox;
 import com.vektor.mail.core.model.Message;
 import com.vektor.mail.core.plugin.MailContext;
 import com.vektor.mail.core.plugin.StorageContext;
 import com.vektor.mail.core.plugin.StoragePlugin;
+import com.vektor.mail.storage.db.repository.AccountRepository;
 import com.vektor.mail.storage.db.repository.MailboxRepository;
 import com.vektor.mail.storage.db.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class MessageStorageProcessor implements Processor {
     public static final String ATTR_STORED_MESSAGE = "storedMessage";
 
     private final StoragePlugin storagePlugin;
+    private final AccountRepository accountRepository;
     private final MailboxRepository mailboxRepository;
     private final MessageRepository messageRepository;
 
@@ -61,7 +64,9 @@ public class MessageStorageProcessor implements Processor {
     }
 
     private java.util.UUID resolveAccountId(String email) {
-        // Simplified: real impl would look up account by email
-        throw new UnsupportedOperationException("Account resolution must be wired via AccountRepository");
+        String addr = email != null ? email.replaceAll(".*<(.+)>.*", "$1").trim() : null;
+        return accountRepository.findByEmail(addr)
+                .map(Account::getId)
+                .orElseThrow(() -> new IllegalStateException("No account for address: " + addr));
     }
 }

@@ -12,6 +12,7 @@ import io.netty.channel.*;
 import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
  * POP3 command handler. Implements: GREETING, USER, PASS, STAT, LIST, RETR, DELE, NOOP, QUIT, RSET.
  */
 @Slf4j
+@Component
 @RequiredArgsConstructor
 @ChannelHandler.Sharable
 public class Pop3ServerHandler extends SimpleChannelInboundHandler<String> {

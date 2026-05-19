@@ -58,6 +58,10 @@ public class IncomingMailRoute extends RouteBuilder {
             .routeId("mail-defer")
             .log("Mail DEFERRED from ${body.envelopeFrom}: greylisting");
 
+        from("direct:mail.rules")
+            .routeId("mail-rules")
+            .log("Applying server-side rules for message from ${body.envelopeFrom}");
+
         from("direct:mail.error")
             .routeId("mail-error")
             .log("Pipeline error for message from ${body.envelopeFrom}");

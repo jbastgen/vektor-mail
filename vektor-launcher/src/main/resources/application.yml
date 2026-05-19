@@ -77,6 +77,7 @@ vektor:
   pop3:
     port: ${VEKTOR_POP3_PORT:110}
     pop3s-port: ${VEKTOR_POP3S_PORT:995}
+    enabled: true
   storage:
     active-plugin: ${VEKTOR_STORAGE_PLUGIN:vektor-storage-db}
     maildir:
@@ -116,6 +117,8 @@ vektor:
     port: 1430
   pop3:
     port: 1100
+    pop3s-port: 9950
+    enabled: true
 
 ---
 spring:

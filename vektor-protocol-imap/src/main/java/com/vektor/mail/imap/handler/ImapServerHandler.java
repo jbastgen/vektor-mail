@@ -12,6 +12,7 @@ import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * CAPABILITY, NOOP, LOGOUT, LOGIN, SELECT, EXAMINE, LIST, FETCH, STORE, EXPUNGE, CLOSE.
  */
 @Slf4j
+@Component
 @RequiredArgsConstructor
 @ChannelHandler.Sharable
 public class ImapServerHandler extends SimpleChannelInboundHandler<String> {

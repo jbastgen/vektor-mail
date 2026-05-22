@@ -1,0 +1,134 @@
+spring:
+  application:
+    name: vektor-mail
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:vektor;DB_CLOSE_DELAY=-1;MODE=PostgreSQL}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_DIALECT:org.hibernate.dialect.H2Dialect}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+springdoc:
+  api-docs:
+    path: /api/docs
+  swagger-ui:
+    path: /api/docs/ui
+    disable-swagger-default-url: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+camel:
+  springboot:
+    main-run-controller: false
+
+vektor:
+  plugins:
+    dir: ${VEKTOR_PLUGINS_DIR:./plugins}
+  tls:
+    keystore-path: ${VEKTOR_TLS_KEYSTORE_PATH:./certs/keystore.p12}
+    keystore-password: ${VEKTOR_TLS_KEYSTORE_PASSWORD:changeit}
+  security:
+    master-key: ${VEKTOR_MASTER_KEY:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=}
+    jwt:
+      private-key: ${VEKTOR_JWT_PRIVATE_KEY:}
+      public-key: ${VEKTOR_JWT_PUBLIC_KEY:}
+      access-token-ttl-seconds: 900
+      refresh-token-ttl-seconds: 2592000
+  smtp:
+    port: ${VEKTOR_SMTP_PORT:25}
+    submission-port: ${VEKTOR_SMTP_SUBMISSION_PORT:587}
+    smtps-port: ${VEKTOR_SMTPS_PORT:465}
+    hostname: ${VEKTOR_HOSTNAME:localhost}
+    tls-enabled: ${VEKTOR_TLS_ENABLED:false}
+    max-message-size-bytes: ${VEKTOR_MAX_MESSAGE_SIZE:26214400}
+  imap:
+    port: ${VEKTOR_IMAP_PORT:143}
+    imaps-port: ${VEKTOR_IMAPS_PORT:993}
+  pop3:
+    port: ${VEKTOR_POP3_PORT:110}
+    pop3s-port: ${VEKTOR_POP3S_PORT:995}
+    enabled: true
+  storage:
+    active-plugin: ${VEKTOR_STORAGE_PLUGIN:vektor-storage-db}
+    maildir:
+      base: ${VEKTOR_MAILDIR_BASE:./data/maildir}
+    mbox:
+      base: ${VEKTOR_MBOX_BASE:./data/mbox}
+  backup:
+    enabled: true
+  sync:
+    enabled: false
+  greylist:
+    delay-minutes: 5
+  spam:
+    rspamd-url: ${VEKTOR_RSPAMD_URL:http://rspamd:11333}
+    reject-score: 15.0
+  search:
+    index-dir: ${VEKTOR_SEARCH_INDEX_DIR:./data/index}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:vektor;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+vektor:
+  smtp:
+    port: 2525
+    submission-port: 5870
+  imap:
+    port: 1430
+  pop3:
+    port: 1100
+    pop3s-port: 9950
+    enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

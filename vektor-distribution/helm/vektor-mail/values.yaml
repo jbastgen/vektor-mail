@@ -1,0 +1,70 @@
+replicaCount: 1
+
+image:
+  repository: vektor/vektor-mail
+  pullPolicy: IfNotPresent
+  tag: ""  # defaults to Chart.appVersion
+
+service:
+  httpPort: 8080
+  smtpPort: 25
+  submissionPort: 587
+  imapPort: 143
+  imapsPort: 993
+  pop3Port: 110
+
+ingress:
+  enabled: false
+  className: nginx
+  host: mail.example.com
+  tls:
+    enabled: true
+    secretName: vektor-tls
+
+persistence:
+  mailData:
+    size: 50Gi
+    storageClass: ""
+  searchIndex:
+    size: 10Gi
+    storageClass: ""
+  backups:
+    size: 100Gi
+    storageClass: ""
+
+database:
+  external: false
+  url: ""
+  username: vektor
+  existingSecret: ""
+  passwordKey: db-password
+
+masterKey:
+  existingSecret: vektor-secrets
+  key: master-key
+
+jwt:
+  existingSecret: vektor-secrets
+  privateKeyKey: jwt-private-key
+  publicKeyKey: jwt-public-key
+
+postgresql:
+  enabled: true
+  auth:
+    database: vektor
+    username: vektor
+    existingSecret: vektor-postgres-secret
+
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 250m
+  limits:
+    memory: 2Gi
+    cpu: 2
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
